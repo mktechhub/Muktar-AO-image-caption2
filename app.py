@@ -83,7 +83,7 @@ def load_models():
     with open("tokenizer.pkl", "rb") as f:
         tokenizer = pickle.load(f)
 
-    max_length = 42  # same value used during training
+    max_length = 40  # same value used during training
 
     return caption_model, feature_extractor, tokenizer, max_length
 
