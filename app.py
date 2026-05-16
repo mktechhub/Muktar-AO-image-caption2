@@ -24,9 +24,9 @@ DIGRAPHS      = ["dh", "ch", "sh", "ny", "ph", "ts"]
 
 # ── Google Drive file IDs — REPLACE THESE WITH YOUR ACTUAL IDs ───────────────
 DRIVE_FILES = {
-    "caption_model.keras"    : "YOUR_CAPTION_MODEL_FILE_ID",
-    "feature_extractor.keras": "YOUR_FEATURE_EXTRACTOR_FILE_ID",
-    "tokenizer.pkl"          : "YOUR_TOKENIZER_FILE_ID",
+    "caption_model.keras"    : "1_ahJ11wNBCz5DM83XyyjMlbkefZoddt4",
+    "feature_extractor.keras": "1FkxKKmduQFosbmkHVKzHf1zrXBb2mtNj",
+    "tokenizer.pkl"          : "1oOPJLqsTGJmpqi1tVnZTPceJNGZcFlRX",
 }
 
 # ── Download models from Google Drive ────────────────────────────────────────
