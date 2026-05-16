@@ -28,16 +28,14 @@ DRIVE_FILES = {
     "feature_extractor.keras": "1FkxKKmduQFosbmkHVKzHf1zrXBb2mtNj",
     "tokenizer.pkl"          : "1oOPJLqsTGJmpqi1tVnZTPceJNGZcFlRX",
 }
-
-# ── Download models from Google Drive ────────────────────────────────────────
 @st.cache_resource(show_spinner=False)
 def download_models():
     for filename, file_id in DRIVE_FILES.items():
         if not os.path.exists(filename):
             with st.spinner(f"Downloading {filename} …"):
                 try:
-                    url = f"https://drive.google.com/uc?id={file_id}&export=download&confirm=t"
-                    gdown.download(url, filename, quiet=False, fuzzy=True)
+                    url = f"https://drive.google.com/uc?id={file_id}&confirm=t"
+                    gdown.download(url, filename, quiet=False)
                 except Exception as e:
                     st.error(f"❌ Failed to download {filename}: {e}")
                     st.stop()
