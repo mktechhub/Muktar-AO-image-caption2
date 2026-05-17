@@ -14,364 +14,193 @@ st.set_page_config(
     layout="centered"
 )
 
-# ── CSS ───────────────────────────────────────────────────────────────────────
+# ── CSS — matches the HTML preview exactly ────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Syne:wght@800&display=swap');
 
-:root {
-    --violet:   #7c3aed;
-    --pink:     #ec4899;
-    --cyan:     #06b6d4;
-    --lime:     #84cc16;
-    --orange:   #f97316;
-    --yellow:   #facc15;
-    --bg:       #0a0914;
-    --card:     #13111f;
-    --card2:    #1a1730;
-    --border:   rgba(255,255,255,0.07);
-    --text:     #ede9fe;
-    --muted:    #7a6fa8;
-    --grad-hero:    linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f97316 100%);
-    --grad-caption: linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
-    --frame-c1: #7c3aed;
-    --frame-c2: #ec4899;
-    --frame-c3: #f97316;
-    --frame-c4: #06b6d4;
-    --frame-c5: #84cc16;
-}
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Reset ── */
 html, body, [class*="css"] {
     font-family: 'Nunito', sans-serif !important;
-    background-color: var(--bg) !important;
-    color: var(--text) !important;
+    background: #0f0e17 !important;
+    color: #ede9fe !important;
 }
 
-/* ── Remove default padding so frame reaches edges ── */
-.main > div { padding: 0 !important; }
+/* ── Remove Streamlit chrome padding ── */
+.main > div { padding-top: 0 !important; }
 .main .block-container {
-    padding: 0 !important;
-    max-width: 100% !important;
+    max-width: 720px !important;
+    padding: 0 20px 60px !important;
+    margin: 0 auto !important;
 }
 
-/* ════════════════════════════════════════════
-   OUTER FRAME — fixed neon border on all 4 sides
-   ════════════════════════════════════════════ */
-.page-frame {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-}
-
-/* ── 4 glowing edge bars ── */
-.frame-top, .frame-bottom, .frame-left, .frame-right {
-    position: absolute;
-    background: linear-gradient(90deg,
-        var(--frame-c1), var(--frame-c2), var(--frame-c3),
-        var(--frame-c4), var(--frame-c5), var(--frame-c1));
-    background-size: 300% 100%;
-    animation: frame-shift 6s linear infinite;
-}
-.frame-top    { top: 0;    left: 0; right: 0; height: 4px; }
-.frame-bottom { bottom: 0; left: 0; right: 0; height: 4px; }
-.frame-left   { top: 0;    left: 0; bottom: 0; width: 4px;
-    background: linear-gradient(180deg,
-        var(--frame-c1), var(--frame-c2), var(--frame-c3),
-        var(--frame-c4), var(--frame-c5), var(--frame-c1));
-    background-size: 100% 300%;
-    animation: frame-shift-v 6s linear infinite;
-}
-.frame-right  { top: 0; right: 0; bottom: 0; width: 4px;
-    background: linear-gradient(180deg,
-        var(--frame-c5), var(--frame-c4), var(--frame-c3),
-        var(--frame-c2), var(--frame-c1), var(--frame-c5));
-    background-size: 100% 300%;
-    animation: frame-shift-v 6s linear infinite reverse;
-}
-@keyframes frame-shift   { 0%{background-position:0% 0%} 100%{background-position:300% 0%} }
-@keyframes frame-shift-v { 0%{background-position:0% 0%} 100%{background-position:0% 300%} }
-
-/* ── Corner jewels ── */
-.corner {
-    position: absolute;
-    width: 20px; height: 20px;
-}
-.corner::before, .corner::after {
-    content: "";
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: jewel-pulse 3s ease-in-out infinite;
-}
-.corner::before { width: 10px; height: 10px; top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    box-shadow: 0 0 12px 4px rgba(255,255,255,0.7);
-}
-.corner::after  { width: 4px;  height: 4px;  top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    background: white;
-}
-@keyframes jewel-pulse {
-    0%,100% { box-shadow: 0 0 12px 4px rgba(255,255,255,0.6); }
-    50%      { box-shadow: 0 0 22px 8px rgba(255,255,255,0.9); }
-}
-.corner-tl { top: -8px;  left: -8px;  }
-.corner-tr { top: -8px;  right: -8px; }
-.corner-bl { bottom: -8px; left: -8px;  }
-.corner-br { bottom: -8px; right: -8px; }
-
-/* ── Glow halos behind the 4 bars ── */
-.frame-glow-top, .frame-glow-bottom {
-    position: absolute; left: 0; right: 0; height: 60px; pointer-events: none;
-}
-.frame-glow-top    { top: 0;
-    background: linear-gradient(180deg, rgba(124,58,237,0.18) 0%, transparent 100%); }
-.frame-glow-bottom { bottom: 0;
-    background: linear-gradient(0deg, rgba(6,182,212,0.15) 0%, transparent 100%); }
-.frame-glow-left, .frame-glow-right {
-    position: absolute; top: 0; bottom: 0; width: 60px; pointer-events: none;
-}
-.frame-glow-left  { left: 0;
-    background: linear-gradient(90deg, rgba(236,72,153,0.13) 0%, transparent 100%); }
-.frame-glow-right { right: 0;
-    background: linear-gradient(270deg, rgba(132,204,22,0.10) 0%, transparent 100%); }
-
-/* ── Inner decorative double-rule ── */
-.frame-inner-top, .frame-inner-bottom {
-    position: absolute; left: 24px; right: 24px; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-}
-.frame-inner-top    { top: 14px;    }
-.frame-inner-bottom { bottom: 14px; }
-.frame-inner-left, .frame-inner-right {
-    position: absolute; top: 24px; bottom: 24px; width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent);
-}
-.frame-inner-left  { left: 14px;  }
-.frame-inner-right { right: 14px; }
-
-/* ── Dot-grid background ── */
-.dot-grid-bg {
-    position: fixed; inset: 0;
-    background-image: radial-gradient(rgba(255,255,255,0.032) 1px, transparent 1px);
-    background-size: 28px 28px;
-    pointer-events: none; z-index: -1;
-}
-
-/* ════════════════════════════════════════════
-   INNER CONTENT WRAPPER
-   ════════════════════════════════════════════ */
-.content-wrap {
-    max-width: 760px;
+/* ══════════════════════════════════════
+   WRAP  — the outer design container
+   ══════════════════════════════════════ */
+.wrap {
+    background: #0f0e17;
+    padding: 20px;
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 20px 32px 48px;
 }
 
 /* ── Hero ── */
 .hero {
     text-align: center;
-    padding: 2.6rem 1rem 1.4rem;
+    padding: 24px 0 16px;
     position: relative;
 }
-.hero-blob {
-    position: absolute; top: -60px; left: 50%;
+.blob1 {
+    position: absolute; top: -20px; left: 50%;
     transform: translateX(-50%);
-    width: 500px; height: 300px;
+    width: 340px; height: 160px;
     background: radial-gradient(ellipse at 30% 50%,
-        rgba(124,58,237,0.35) 0%, rgba(236,72,153,0.2) 40%, transparent 70%);
-    filter: blur(40px); pointer-events: none;
+        rgba(124,58,237,0.38) 0%, rgba(236,72,153,0.22) 45%, transparent 70%);
+    filter: blur(28px); pointer-events: none;
 }
-.hero-blob2 {
-    position: absolute; top: -20px; left: 62%;
-    width: 280px; height: 200px;
-    background: radial-gradient(ellipse, rgba(6,182,212,0.22) 0%, transparent 70%);
-    filter: blur(35px); pointer-events: none;
+.blob2 {
+    position: absolute; top: 0; left: 62%;
+    width: 200px; height: 130px;
+    background: radial-gradient(ellipse, rgba(6,182,212,0.25) 0%, transparent 70%);
+    filter: blur(24px); pointer-events: none;
 }
-.hero-icon-wrap {
+.icon-box {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 80px; height: 80px; border-radius: 24px;
-    background: var(--grad-hero); font-size: 2.4rem; margin-bottom: 1.1rem;
-    box-shadow: 0 0 40px rgba(124,58,237,0.55), 0 0 80px rgba(236,72,153,0.2);
-    animation: float 4s ease-in-out infinite;
+    width: 62px; height: 62px; border-radius: 18px;
+    background: linear-gradient(135deg, #7c3aed, #ec4899, #f97316);
+    font-size: 1.8rem; margin-bottom: 12px;
+    box-shadow: 0 0 30px rgba(124,58,237,0.55), 0 0 60px rgba(236,72,153,0.2);
+    animation: float-icon 4s ease-in-out infinite;
 }
-@keyframes float {
+@keyframes float-icon {
     0%,100% { transform: translateY(0px); }
     50%      { transform: translateY(-8px); }
 }
 .hero-title {
-    font-family: 'Syne', sans-serif !important;
-    font-size: 2.8rem; font-weight: 800;
-    background: var(--grad-hero);
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800; line-height: 1.1;
+    background: linear-gradient(135deg, #7c3aed, #ec4899, #f97316);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin: 0 0 0.8rem; line-height: 1.12;
+    background-clip: text; margin-bottom: 8px;
 }
 .hero-sub {
-    font-size: 1rem; color: var(--muted); max-width: 460px;
-    margin: 0 auto 1.8rem; line-height: 1.75;
+    font-size: 0.85rem; color: #8b7fb8; line-height: 1.7;
+    max-width: 340px; margin: 0 auto 16px;
 }
 .hero-sub b { color: #67e8f9; }
 
 /* ── Badges ── */
-.badges { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
-.badge  { padding:.3rem .9rem; border-radius:50px; font-size:.75rem; font-weight:800;
-          letter-spacing:.04em; border:1px solid transparent; }
-.b1 { background:rgba(124,58,237,.15); border-color:rgba(124,58,237,.45); color:#c4b5fd; }
-.b2 { background:rgba(6,182,212,.12);  border-color:rgba(6,182,212,.40);  color:#67e8f9; }
-.b3 { background:rgba(236,72,153,.12); border-color:rgba(236,72,153,.40); color:#f9a8d4; }
-.b4 { background:rgba(132,204,22,.12); border-color:rgba(132,204,22,.40); color:#bef264; }
+.badges {
+    display: flex; justify-content: center; gap: 6px;
+    flex-wrap: wrap; margin-bottom: 18px;
+}
+.badge {
+    padding: 4px 12px; border-radius: 50px; font-size: 0.68rem;
+    font-weight: 800; letter-spacing: 0.04em; border: 1px solid transparent;
+}
+.b1 { background: rgba(124,58,237,.18); border-color: rgba(124,58,237,.5);  color: #c4b5fd; }
+.b2 { background: rgba(6,182,212,.14);  border-color: rgba(6,182,212,.45);  color: #67e8f9; }
+.b3 { background: rgba(236,72,153,.14); border-color: rgba(236,72,153,.45); color: #f9a8d4; }
+.b4 { background: rgba(132,204,22,.14); border-color: rgba(132,204,22,.45); color: #bef264; }
 
 /* ── Rainbow bar ── */
-.rainbow-bar {
+.rainbow {
     height: 2px;
     background: linear-gradient(90deg,
-        #7c3aed,#ec4899,#f97316,#facc15,#84cc16,#06b6d4,#7c3aed);
-    background-size: 200% 100%;
-    border-radius: 2px; margin: 1.4rem 0 2rem;
-    animation: shimmer 4s linear infinite;
+        #7c3aed, #ec4899, #f97316, #facc15, #84cc16, #06b6d4, #7c3aed);
+    background-size: 200% 100%; border-radius: 2px;
+    margin: 0 0 18px; animation: shimmer 4s linear infinite;
 }
-@keyframes shimmer { 0%{background-position:0% 0%} 100%{background-position:200% 0%} }
-
-/* ── Content section frame (inner card with ornate border) ── */
-.section-frame {
-    background: var(--card);
-    border-radius: 24px;
-    padding: 2rem;
-    position: relative;
-    margin-bottom: 1.5rem;
-
-    /* Triple-layered border trick via box-shadow */
-    box-shadow:
-        0 0 0 1px rgba(124,58,237,0.35),
-        0 0 0 3px rgba(236,72,153,0.12),
-        0 0 0 5px rgba(6,182,212,0.06),
-        0 12px 40px rgba(0,0,0,0.5),
-        0 0 60px rgba(124,58,237,0.08);
-}
-/* Corner accent marks */
-.section-frame::before {
-    content: "";
-    position: absolute; inset: 6px;
-    border-radius: 18px;
-    border: 1px solid rgba(255,255,255,0.04);
-    pointer-events: none;
+@keyframes shimmer {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
 }
 
 /* ── Upload zone ── */
 [data-testid="stFileUploader"] {
-    background: var(--card2) !important;
-    border: 2px dashed rgba(124,58,237,0.4) !important;
-    border-radius: 18px !important;
-    padding: 1.2rem !important;
-    transition: all 0.3s;
+    background: #1e1c2e !important;
+    border: 2px dashed rgba(124,58,237,.45) !important;
+    border-radius: 16px !important;
+    padding: 18px !important;
+    text-align: center !important;
+    margin-bottom: 16px !important;
+    transition: border-color .3s, background .3s;
 }
 [data-testid="stFileUploader"]:hover {
-    border-color: rgba(236,72,153,0.6) !important;
-    background: rgba(124,58,237,0.07) !important;
+    border-color: rgba(236,72,153,.6) !important;
+    background: rgba(124,58,237,.06) !important;
 }
-[data-testid="stFileUploader"] label { color: var(--muted) !important; }
+[data-testid="stFileUploader"] label,
+[data-testid="stFileUploader"] span { color: #8b7fb8 !important; font-size: 0.8rem !important; }
+[data-testid="stFileUploaderDropzoneInstructions"] { color: #8b7fb8 !important; }
 
 /* ── Uploaded image ── */
 [data-testid="stImage"] img {
-    border-radius: 16px !important;
-    border: 2px solid rgba(124,58,237,0.4) !important;
-    box-shadow:
-        0 0 0 4px rgba(124,58,237,0.10),
-        0 0 30px rgba(124,58,237,0.25),
-        0 0 60px rgba(236,72,153,0.10) !important;
-    transition: all 0.4s;
+    border-radius: 14px !important;
+    border: 2px solid rgba(124,58,237,.35) !important;
+    box-shadow: 0 0 24px rgba(124,58,237,.22), 0 0 50px rgba(236,72,153,.1) !important;
+    transition: transform .3s, box-shadow .3s;
 }
 [data-testid="stImage"] img:hover {
-    box-shadow:
-        0 0 0 4px rgba(124,58,237,0.18),
-        0 0 50px rgba(124,58,237,0.45),
-        0 0 90px rgba(6,182,212,0.15) !important;
-    transform: scale(1.015);
+    transform: scale(1.012);
+    box-shadow: 0 0 40px rgba(124,58,237,.4), 0 0 70px rgba(236,72,153,.15) !important;
 }
 
 /* ── Caption card ── */
-.caption-card {
-    background: var(--card2);
-    border-radius: 18px;
-    border: 1px solid rgba(124,58,237,0.28);
-    padding: 1.6rem;
-    margin-top: 0.4rem;
+.cap-card {
+    background: #1e1c2e;
+    border-radius: 14px;
+    border: 1px solid rgba(124,58,237,.28);
+    padding: 16px;
     position: relative; overflow: hidden;
-    box-shadow: 0 0 0 2px rgba(236,72,153,0.06), 0 8px 24px rgba(0,0,0,0.4);
+    height: 100%;
 }
-.caption-card::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--grad-caption);
-}
-.caption-card::after {
-    content: ""; position: absolute;
-    bottom: -55px; right: -55px; width: 170px; height: 170px;
-    background: radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%);
-    pointer-events: none;
+.cap-card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #06b6d4, #7c3aed);
 }
 .cap-label {
-    font-size: .68rem; font-weight: 800; letter-spacing: .18em;
+    font-size: 0.62rem; font-weight: 800; letter-spacing: .18em;
     text-transform: uppercase;
-    background: var(--grad-caption);
+    background: linear-gradient(90deg, #06b6d4, #7c3aed);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: .8rem;
+    background-clip: text; margin-bottom: 8px; display: block;
 }
 .cap-text {
-    font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700;
-    color: var(--text); line-height: 1.6; margin-bottom: 1.1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    color: #ede9fe; line-height: 1.55; margin-bottom: 10px;
 }
-.chip-row { display:flex; gap:.45rem; flex-wrap:wrap; }
+.chips { display: flex; gap: 5px; flex-wrap: wrap; }
 .chip {
-    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-    border-radius: 50px; padding: .2rem .65rem; font-size: .7rem; color: var(--muted);
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 50px; padding: 2px 8px;
+    font-size: 0.62rem; color: #8b7fb8;
 }
 
-/* ── Streamlit overrides ── */
-[data-testid="stAlert"] { border-radius: 14px !important; }
-.stSpinner > div { border-top-color: var(--violet) !important; }
-h1,h2,h3 { font-family:'Syne',sans-serif !important; color:var(--text) !important; }
-hr  { border-color: var(--border) !important; }
+/* ── Streamlit alert / spinner overrides ── */
+[data-testid="stAlert"]   { border-radius: 14px !important; }
+.stSpinner > div          { border-top-color: #7c3aed !important; }
+.stColumns [data-testid="column"] { gap: 14px; }
+
+/* ── Hide default Streamlit footer ── */
 footer { display: none !important; }
 
-/* ── Footer ── */
+/* ── Custom footer ── */
 .custom-footer {
-    text-align: center; padding: 2rem 0 1rem; margin-top: 2.5rem;
-    border-top: 1px solid var(--border);
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,.07);
+    margin-top: 20px; padding-top: 14px;
 }
-.custom-footer p { font-size: .77rem; color: var(--muted); margin: .2rem 0; }
+.custom-footer p { font-size: 0.7rem; color: #8b7fb8; margin: 2px 0; }
 .custom-footer strong { color: #67e8f9; }
 </style>
-
-<!-- Dot grid bg -->
-<div class="dot-grid-bg"></div>
-
-<!-- ════ FULL-PAGE FRAME ════ -->
-<div class="page-frame">
-  <!-- Animated edge bars -->
-  <div class="frame-top"></div>
-  <div class="frame-bottom"></div>
-  <div class="frame-left"></div>
-  <div class="frame-right"></div>
-
-  <!-- Glow halos -->
-  <div class="frame-glow-top"></div>
-  <div class="frame-glow-bottom"></div>
-  <div class="frame-glow-left"></div>
-  <div class="frame-glow-right"></div>
-
-  <!-- Inner double rules -->
-  <div class="frame-inner-top"></div>
-  <div class="frame-inner-bottom"></div>
-  <div class="frame-inner-left"></div>
-  <div class="frame-inner-right"></div>
-
-  <!-- Corner jewels -->
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
-</div>
 """, unsafe_allow_html=True)
 
 
@@ -480,30 +309,32 @@ def generate_caption(image_path, caption_model, feature_extractor, tokenizer, ma
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  UI
+#  UI  — mirrors the HTML preview layout 1:1
 # ══════════════════════════════════════════════════════════════════════════════
 
-# ── Hero ──────────────────────────────────────────────────────────────────────
+# ── Hero + badges + rainbow bar ───────────────────────────────────────────────
 st.markdown("""
-<div class="hero">
-  <div class="hero-blob"></div>
-  <div class="hero-blob2"></div>
-  <div class="hero-icon-wrap">🖼️</div>
-  <h1 class="hero-title">Afaan Oromo<br>Image Captioner</h1>
-  <p class="hero-sub">
-    Upload any image and get an AI-generated caption in
-    <b>Afaan Oromo</b> — Ethiopia's most widely spoken language.
-  </p>
-</div>
+<div class="wrap">
+  <div class="hero">
+    <div class="blob1"></div>
+    <div class="blob2"></div>
+    <div class="icon-box">🖼️</div>
+    <div class="hero-title">Afaan Oromo<br>Image Captioner</div>
+    <p class="hero-sub">
+      Upload any image and get an AI-generated caption in
+      <b>Afaan Oromo</b> — Ethiopia's most widely spoken language.
+    </p>
+  </div>
 
-<div class="badges">
-  <span class="badge b1">⚡ EfficientNetB0</span>
-  <span class="badge b2">🔭 Bahdanau Attention</span>
-  <span class="badge b3">🧬 LSTM Decoder</span>
-  <span class="badge b4">🇪🇹 Afaan Oromo</span>
-</div>
+  <div class="badges">
+    <span class="badge b1">⚡ EfficientNetB0</span>
+    <span class="badge b2">🔭 Bahdanau Attention</span>
+    <span class="badge b3">🧬 LSTM Decoder</span>
+    <span class="badge b4">🇪🇹 Afaan Oromo</span>
+  </div>
 
-<div class="rainbow-bar"></div>
+  <div class="rainbow"></div>
+</div>
 """, unsafe_allow_html=True)
 
 # ── Load models ───────────────────────────────────────────────────────────────
@@ -513,37 +344,36 @@ with st.spinner("🚀 Initialising AI models … (first run may take a minute)")
 st.success("✅ Models ready — upload an image to generate a caption!")
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ── Upload section in a decorative frame ──────────────────────────────────────
-st.markdown('<div class="section-frame">', unsafe_allow_html=True)
-
+# ── Upload ────────────────────────────────────────────────────────────────────
 uploaded = st.file_uploader(
     "📂  Drop an image here, or click to browse",
     type=["jpg", "jpeg", "png"],
     help="Supports JPG & PNG. The model generates an Afaan Oromo caption."
 )
 
+# ── Result ────────────────────────────────────────────────────────────────────
 if uploaded is not None:
     tmp_path = "uploaded_image.jpg"
     with open(tmp_path, "wb") as f:
         f.write(uploaded.getbuffer())
 
     st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1], gap="large")
+    col1, col2 = st.columns([1, 1], gap="medium")
 
     with col1:
         st.image(uploaded, caption="Uploaded Image", use_container_width=True)
 
     with col2:
-        with st.spinner("✨ Generating your caption …"):
+        with st.spinner("✨ Generating caption …"):
             try:
                 caption = generate_caption(
                     tmp_path, caption_model, feature_extractor, tokenizer, max_length
                 )
                 st.markdown(f"""
-<div class="caption-card">
-  <div class="cap-label">✦ Generated Caption</div>
+<div class="cap-card">
+  <span class="cap-label">✦ Generated Caption</span>
   <div class="cap-text">{caption}</div>
-  <div class="chip-row">
+  <div class="chips">
     <span class="chip">📐 EfficientNetB0</span>
     <span class="chip">🔍 Attention</span>
     <span class="chip">🇪🇹 Afaan Oromo</span>
@@ -551,8 +381,6 @@ if uploaded is not None:
 </div>""", unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"❌ Error generating caption: {e}")
-
-st.markdown('</div>', unsafe_allow_html=True)  # close section-frame
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("""
