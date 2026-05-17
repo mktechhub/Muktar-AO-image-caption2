@@ -250,6 +250,140 @@ html, body, [class*="css"] {
 h1,h2,h3 { font-family: 'Syne', sans-serif !important; color: var(--text) !important; }
 hr { border-color: var(--border) !important; }
 footer { display: none !important; }
+/* ─ Ornamental Page Frame ─ */
+.page-frame-top,
+.page-frame-bottom,
+.page-frame-left,
+.page-frame-right {{
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+}}
+
+/* Top bar */
+.page-frame-top {{
+    top: 0; left: 0; right: 0;
+    height: 18px;
+    background: linear-gradient(90deg,
+        #7c3aed 0%, #ec4899 25%, #f97316 50%, #ec4899 75%, #7c3aed 100%);
+    background-size: 200% 100%;
+    animation: frameShimmer 6s linear infinite;
+}}
+
+/* Bottom bar */
+.page-frame-bottom {{
+    bottom: 0; left: 0; right: 0;
+    height: 18px;
+    background: linear-gradient(90deg,
+        #7c3aed 0%, #ec4899 25%, #f97316 50%, #ec4899 75%, #7c3aed 100%);
+    background-size: 200% 100%;
+    animation: frameShimmer 6s linear infinite reverse;
+}}
+
+/* Left bar */
+.page-frame-left {{
+    top: 0; left: 0; bottom: 0;
+    width: 18px;
+    background: linear-gradient(180deg,
+        #7c3aed 0%, #06b6d4 25%, #84cc16 50%, #06b6d4 75%, #7c3aed 100%);
+    background-size: 100% 200%;
+    animation: frameShimmerV 6s linear infinite;
+}}
+
+/* Right bar */
+.page-frame-right {{
+    top: 0; right: 0; bottom: 0;
+    width: 18px;
+    background: linear-gradient(180deg,
+        #7c3aed 0%, #06b6d4 25%, #84cc16 50%, #06b6d4 75%, #7c3aed 100%);
+    background-size: 100% 200%;
+    animation: frameShimmerV 6s linear infinite reverse;
+}}
+
+/* Inner subtle glow line on frame */
+.page-frame-top::after {{
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.4);
+}}
+.page-frame-bottom::after {{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.4);
+}}
+.page-frame-left::after {{
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 3px;
+    background: rgba(255,255,255,0.4);
+}}
+.page-frame-right::after {{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: rgba(255,255,255,0.4);
+}}
+
+/* Corner ornament diamonds */
+.page-frame-corner {{
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}}
+.page-frame-corner::before {{
+    content: "✦";
+    font-size: 18px;
+    color: #facc15;
+    text-shadow: 0 0 12px rgba(250,204,21,0.8);
+    animation: cornerPulse 3s ease-in-out infinite;
+}}
+.pfc-tl {{ top: 1px;  left: 1px;  }}
+.pfc-tr {{ top: 1px;  right: 1px; }}
+.pfc-bl {{ bottom: 1px; left: 1px; }}
+.pfc-br {{ bottom: 1px; right: 1px; }}
+
+/* Inner decorative line inset from the main frame */
+.page-frame-inner {{
+    position: fixed;
+    z-index: 9998;
+    pointer-events: none;
+    border: 1px solid rgba(124,58,237,0.25);
+    top: 22px; left: 22px; right: 22px; bottom: 22px;
+    border-radius: 4px;
+}}
+
+@keyframes frameShimmer {{
+    0%   {{ background-position: 0% 0%; }}
+    100% {{ background-position: 200% 0%; }}
+}}
+@keyframes frameShimmerV {{
+    0%   {{ background-position: 0% 0%; }}
+    100% {{ background-position: 0% 200%; }}
+}}
+@keyframes cornerPulse {{
+    0%,100% {{ opacity: 1; transform: scale(1) rotate(0deg); }}
+    50%      {{ opacity: 0.6; transform: scale(1.25) rotate(45deg); }}
+}}
+
+/* Push page content inside the frame */
+.main .block-container {{
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+    padding-top: 1.8rem !important;
+    padding-bottom: 4rem !important;
+}}
+
 
 /* ─ Footer ─ */
 .custom-footer {
@@ -263,6 +397,15 @@ footer { display: none !important; }
 </style>
 
 <div class="dot-grid-bg"></div>
+<div class="page-frame-top"></div>
+<div class="page-frame-bottom"></div>
+<div class="page-frame-left"></div>
+<div class="page-frame-right"></div>
+<div class="page-frame-corner pfc-tl"></div>
+<div class="page-frame-corner pfc-tr"></div>
+<div class="page-frame-corner pfc-bl"></div>
+<div class="page-frame-corner pfc-br"></div>
+<div class="page-frame-inner"></div>
 """, unsafe_allow_html=True)
 
 
