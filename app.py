@@ -187,4 +187,5 @@ if uploaded is not None:
                 st.error(f"Error generating caption: {e}")
 
 st.divider()
-st.caption("Built with Streamlit · Afaan Oromo Image Captioning Project")
+st.caption("Built with Streamlit · Afaan Oromo Image Captioning ")
+st.caption(" Design and Developed by:MUKTAR GETU Phone number:+251923009973 ")
